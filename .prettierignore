@@ -1,0 +1,31 @@
+# General
+.prettierignore
+.solhintignore
+.husky
+.gitignore
+.gitattributes
+.env.example
+.env
+*.code-workspace
+.DS_STORE
+LICENSE
+dist
+CHANGELOG.md
+
+# Hardhat
+artifacts
+cache
+typechained
+
+# JS
+node_modules
+package-lock.json
+yarn.lock
+yarn-error.log
+
+# Solidity
+contracts/mock
+
+# Docs
+docs
+README.*

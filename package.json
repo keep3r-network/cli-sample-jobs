@@ -1,0 +1,45 @@
+{
+  "name": "@keep3r-network/cli-sample-jobs",
+  "version": "1.0.0-beta.1",
+  "description": "Keep3r CLI Sample Jobs",
+  "keywords": [
+    "keep3r",
+    "cli",
+    "sample",
+    "job",
+    "ethereum",
+    "dca"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keep3r-network/cli-sample-jobs.git"
+  },
+  "license": "MIT",
+  "author": "DeFi Wonderland",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "compile": "hardhat compile",
+    "lint:check": "cross-env prettier --check './**'",
+    "lint:fix": "sort-package-json && cross-env prettier --write './**'",
+    "release": "yarn build && standard-version",
+    "pre-release": "yarn build && standard-version --prerelease rc"
+  },
+  "dependencies": {
+    "@keep3r-network/cli-utils": "1.0.0-beta.1",
+    "ethers": "5.5.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "12.1.4",
+    "@commitlint/config-conventional": "12.1.4",
+    "cross-env": "7.0.3",
+    "prettier": "2.3.1",
+    "prettier-plugin-organize-imports": "2.3.3",
+    "sort-package-json": "1.50.0",
+    "standard-version": "9.3.0",
+    "ts-node": "10.0.0",
+    "typescript": "4.3.2"
+  }
+}
