@@ -1,0 +1,10 @@
+[
+  { "inputs": [{ "internalType": "address", "name": "_governor", "type": "address" }], "stateMutability": "nonpayable", "type": "constructor" },
+  { "inputs": [], "name": "OnlyGovernor", "type": "error" },
+  { "inputs": [{ "internalType": "address", "name": "_job", "type": "address" }], "name": "addJob", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  { "inputs": [{ "internalType": "address[]", "name": "_jobsList", "type": "address[]" }], "name": "addJobs", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  { "inputs": [{ "internalType": "address", "name": "strategy", "type": "address" }], "name": "execute", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  { "inputs": [], "name": "governor", "outputs": [{ "internalType": "address", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" },
+  { "inputs": [], "name": "jobs", "outputs": [{ "internalType": "address[]", "name": "_jobsList", "type": "address[]" }], "stateMutability": "view", "type": "function" },
+  { "stateMutability": "payable", "type": "receive" }
+]

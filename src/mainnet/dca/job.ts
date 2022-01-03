@@ -7,17 +7,17 @@ const jobAddress = '0xEcbA21E26466727d705d48cb0a8DE42B11767Bf7';
 
 const getWorkableTxs: Job['getWorkableTxs'] = async (args) => {
   const correlationId = toKebabCase(metadata.name);
-  if (args.skipIds.includes(correlationId)) {
-    console.log(`${metadata.name} in progress, avoid running`);
-    return args.subject.complete();
-  }
   const logMetadata = {
     job: metadata.name,
     block: args.advancedBlock,
     logId: makeid(5),
   };
-
   const logConsole = prelog(logMetadata);
+
+  if (args.skipIds.includes(correlationId)) {
+    logConsole.log(`Job in progress, avoid running`);
+    return args.subject.complete();
+  }
 
   logConsole.log(`Trying to work`);
 

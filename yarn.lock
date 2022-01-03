@@ -505,10 +505,10 @@
   resolved "https://registry.yarnpkg.com/@hutson/parse-repository-url/-/parse-repository-url-3.0.2.tgz#98c23c950a3d9b6c8f0daed06da6c3af06981340"
   integrity sha512-H9XAx3hc0BQHY6l+IFSWHDySypcXsvsuLhgYLUGywmJ5pswRVQJUHpOsobnLYp2ZUaUlKiKDrgWWhosOwAEM8Q==
 
-"@keep3r-network/cli-utils@1.0.0-beta.1":
-  version "1.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@keep3r-network/cli-utils/-/cli-utils-1.0.0-beta.1.tgz#53ed1bd81896b8505be39d9ef87480c901d75864"
-  integrity sha512-/yDOCJRmVvIhSHiaHpwrFpt0hm6SZTFVXwVke1uTN5RfIoadUGQ/I+Yomirf+4KhDKzrhlY0H859H49DU5rkLg==
+"@keep3r-network/cli-utils@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@keep3r-network/cli-utils/-/cli-utils-1.0.0.tgz#a45ff02f002e6dcdb50af66e6c4c7d76540fc729"
+  integrity sha512-9ZPK8enMFxUvhlj8W5tXC8yyokfbHGVVNBQKysEUu0EJt0HZE58F4MZJuoiojP75yMbkMHyh9ljqctGDTFdWPA==
   dependencies:
     "@ethersproject/abstract-provider" "5.5.1"
     bigint-buffer "1.1.5"

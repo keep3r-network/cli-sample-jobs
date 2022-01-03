@@ -9,18 +9,17 @@ const stealthRelayerAddress = '0xD44A48001A4BAd6f23aD8750eaD0036765A35d4b';
 
 const getWorkableTxs: Job['getWorkableTxs'] = async (args) => {
   const correlationId = toKebabCase(metadata.name);
-  if (args.skipIds.includes(correlationId)) {
-    console.log(`${metadata.name} in progress, avoid running`);
-    return args.subject.complete();
-  }
-
   const logMetadata = {
     job: metadata.name,
     block: args.advancedBlock,
     logId: makeid(5),
   };
-
   const logConsole = prelog(logMetadata);
+
+  if (args.skipIds.includes(correlationId)) {
+    logConsole.log(`Job in progress, avoid running`);
+    return args.subject.complete();
+  }
 
   logConsole.log(`Trying to work`);
 

@@ -20,7 +20,7 @@ const getWorkableTxs: Job['getWorkableTxs'] = async (args) => {
   const job = new Contract(jobAddress, TendV2Keep3rJob2ABI, args.fork.ethersProvider);
   const strategies: string[] = args.retryId ? [args.retryId] : await job.strategies();
 
-  logConsole.log(`Simulating ${strategies.length} strategies`);
+  logConsole.log(args.retryId ? `Retrying strategy` : `Simulating ${strategies.length} strategies`);
 
   for (const [index, strategy] of strategies.entries()) {
     const strategyLogId = `${logMetadata.logId}-${makeid(5)}`;

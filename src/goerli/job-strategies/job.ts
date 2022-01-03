@@ -1,11 +1,9 @@
-import { createForks, GanacheFork, getStealthHash, Job, JobWorkableGroup, makeid, prelog, TransactionError } from '@keep3r-network/cli-utils';
+import { createForks, GanacheFork, Job, JobWorkableGroup, makeid, prelog, TransactionError } from '@keep3r-network/cli-utils';
 import { Contract } from 'ethers';
-import HarvestV2Keep3rStealthJobABI from '../../abi/HarvestV2Keep3rStealthJob.json';
-import StealthRelayerABI from '../../abi/StealthRelayer.json';
+import StrategyABI from '../../abi/Strategy.json';
 import metadata from './metadata.json';
 
-const jobAddress = '0x2150b45626199CFa5089368BDcA30cd0bfB152D6';
-const stealthRelayerAddress = '0x0a61c2146A7800bdC278833F21EBf56Cd660EE2a';
+const jobAddress = '0x8CeA64dc82515D56c22d072167Da44Abd3211B6f';
 const expectedErrors: string[] = ['V2Keep3rJob::work:not-workable', '!authorized', '!healthcheck'];
 const maxStrategiesPerFork = 5;
 
@@ -20,8 +18,8 @@ const getWorkableTxs: Job['getWorkableTxs'] = async (args) => {
 
   logConsole.log(`Trying to work`);
 
-  const job = new Contract(jobAddress, HarvestV2Keep3rStealthJobABI, args.fork.ethersProvider);
-  const strategies: string[] = args.retryId ? [args.retryId] : await job.strategies();
+  const job = new Contract(jobAddress, StrategyABI, args.fork.ethersProvider);
+  const strategies: string[] = args.retryId ? [args.retryId] : await job.jobs();
 
   logConsole.log(args.retryId ? `Retrying strategy` : `Simulating ${strategies.length} strategies`);
 
@@ -30,8 +28,7 @@ const getWorkableTxs: Job['getWorkableTxs'] = async (args) => {
   logConsole.debug(`Created ${forks.length} forks in order to work in parellel`);
 
   const workPromises = forks.map(async (fork, forkIndex) => {
-    const job = new Contract(jobAddress, HarvestV2Keep3rStealthJobABI, fork.ethersProvider);
-    const stealthRelayer = new Contract(stealthRelayerAddress, StealthRelayerABI, fork.ethersProvider);
+    const job = new Contract(jobAddress, StrategyABI, fork.ethersProvider);
     const forkStrategies = strategies.slice(forkIndex * maxStrategiesPerFork, forkIndex * maxStrategiesPerFork + maxStrategiesPerFork);
 
     for (const [index, strategy] of forkStrategies.entries()) {
@@ -45,11 +42,8 @@ const getWorkableTxs: Job['getWorkableTxs'] = async (args) => {
         continue;
       }
 
-      const workData: string = job.interface.encodeFunctionData('work', [strategy]);
-      const stealthHash: string = getStealthHash();
-
       try {
-        await stealthRelayer.connect(args.keeperAddress).callStatic.execute(jobAddress, workData, stealthHash, args.advancedBlock, {
+        await job.connect(args.keeperAddress).callStatic.execute(strategy, {
           blockTag: args.advancedBlock,
         });
 
@@ -58,13 +52,11 @@ const getWorkableTxs: Job['getWorkableTxs'] = async (args) => {
         const workableGroups: JobWorkableGroup[] = [];
 
         for (let index = 0; index < args.bundleBurst; index++) {
-          const tx = await stealthRelayer
-            .connect(args.keeperAddress)
-            .populateTransaction.execute(jobAddress, workData, stealthHash, args.targetBlock + index, {
-              nonce: args.keeperNonce,
-              gasLimit: 5_000_000,
-              type: 2,
-            });
+          const tx = await job.connect(args.keeperAddress).populateTransaction.execute(strategy, {
+            nonce: args.keeperNonce,
+            gasLimit: 5_000_000,
+            type: 2,
+          });
 
           workableGroups.push({
             targetBlock: args.targetBlock + index,
