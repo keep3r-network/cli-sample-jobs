@@ -31,7 +31,7 @@ const getWorkableTxs: Job['getWorkableTxs'] = async (args) => {
     job.getStrategies().then((result) => {
         for (i = 0; i < result.length; i++) {
             let workable = await job.callStatic.harvestable(result[i], {blockTag: args.advancedBlock,});
-            logConsole.lo('harvestable() check for ' + result[i] + '=' + workable);
+            logConsole.log('harvestable() check for ' + result[i] + '=' + workable);
             if(workable == 'true'){
                harvestableStrategies.push(result[i]);
             }
@@ -47,7 +47,7 @@ const getWorkableTxs: Job['getWorkableTxs'] = async (args) => {
     job.getVaults().then((result) => {
         for (i = 0; i < result.length; i++) {
             let workable = await job.earnable(result[i], {blockTag: args.advancedBlock,});
-            logConsole.lo('earnable() check for ' + result[i] + '=' + workable);
+            logConsole.log('earnable() check for ' + result[i] + '=' + workable);
             if(workable == 'true'){
                earnableVaults.push(result[i]);
             }
@@ -68,7 +68,7 @@ const getWorkableTxs: Job['getWorkableTxs'] = async (args) => {
         for(let i = 0; i < harvestableStrategies.length; i++){
             const tx = await job.connect(args.keeperAddress).populateTransaction.harvest(harvestableStrategies[i], {nonce: (args.keeperNonce + i), gasLimit: gas_limit, type: tx_type,});
             workableTxs.push(tx);
-	    }
+        }
         for(let i = 0; i < earnableVaults.length; i++){
             const tx = await job.connect(args.keeperAddress).populateTransaction.earn(earnableVaults[i], {nonce: (args.keeperNonce + workableTxs.length + i), gasLimit: gas_limit, type: tx_type,});
             workableTxs.push(tx);
