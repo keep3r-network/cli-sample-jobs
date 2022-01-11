@@ -28,33 +28,25 @@ const getWorkableTxs: Job['getWorkableTxs'] = async (args) => {
     /////////////////////////////////////////////////////////////////////////
     // find workable harvest()  
     /////////////////////////////////////////////////////////////////////////
-    job.getStrategies().then((result) => {
-        for (i = 0; i < result.length; i++) {
-            let workable = await job.callStatic.harvestable(result[i], {blockTag: args.advancedBlock,});
-            logConsole.log('harvestable() check for ' + result[i] + '=' + workable);
-            if(workable == 'true'){
-               harvestableStrategies.push(result[i]);
-            }
+    let getStrategiesResult = await job.getStrategies();
+    for (i = 0; i < getStrategiesResult.length; i++) {
+        let workable = await job.callStatic.harvestable(getStrategiesResult[i], {blockTag: args.advancedBlock,});
+        logConsole.log('harvestable() check for ' + getStrategiesResult[i] + '=' + workable);
+        if (workable == 'true'){
+            harvestableStrategies.push(result[i]);
         }
-    }).catch(err: any){
-        logConsole.warn('checking harvestable() but failed', {message: err.message,});
-        return args.subject.complete();
     }
 	 
     /////////////////////////////////////////////////////////////////////////
     // find workable earn() 
     /////////////////////////////////////////////////////////////////////////
-    job.getVaults().then((result) => {
-        for (i = 0; i < result.length; i++) {
-            let workable = await job.earnable(result[i], {blockTag: args.advancedBlock,});
-            logConsole.log('earnable() check for ' + result[i] + '=' + workable);
-            if(workable == 'true'){
-               earnableVaults.push(result[i]);
-            }
+    let getVaultsResult = await job.getVaults();
+    for (i = 0; i < getVaultsResult.length; i++) {
+        let workable = await job.earnable(getVaultsResult[i], {blockTag: args.advancedBlock,});
+        logConsole.log('earnable() check for ' + result[i] + '=' + workable);
+        if (workable == 'true'){
+            earnableVaults.push(result[i]);
         }
-    }).catch(err: any){
-        logConsole.warn('checking earnable() but failed', {message: err.message,});
-        return args.subject.complete();
     }
 	 
     /////////////////////////////////////////////////////////////////////////
@@ -63,6 +55,7 @@ const getWorkableTxs: Job['getWorkableTxs'] = async (args) => {
     if(harvestableStrategies.length > 0 || earnableVaults.length > 0){	   	
         let workableTxs = [];
         let gas_limit = 2_500_000;
+        let earn_gas_limit = 1_500_000;
         let tx_type = 2;
 		
         for(let i = 0; i < harvestableStrategies.length; i++){
@@ -70,7 +63,7 @@ const getWorkableTxs: Job['getWorkableTxs'] = async (args) => {
             workableTxs.push(tx);
         }
         for(let i = 0; i < earnableVaults.length; i++){
-            const tx = await job.connect(args.keeperAddress).populateTransaction.earn(earnableVaults[i], {nonce: (args.keeperNonce + workableTxs.length + i), gasLimit: gas_limit, type: tx_type,});
+            const tx = await job.connect(args.keeperAddress).populateTransaction.earn(earnableVaults[i], {nonce: (args.keeperNonce + workableTxs.length + i), gasLimit: earn_gas_limit, type: tx_type,});
             workableTxs.push(tx);
         }
       		
